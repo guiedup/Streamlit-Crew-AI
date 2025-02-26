@@ -1,0 +1,4 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+    "postCreateCommand": "sudo apt update && sudo apt install -y build-essential wget && wget https://www.sqlite.org/2024/sqlite-autoconf-3450200.tar.gz && tar xvfz sqlite-autoconf-*.tar.gz && cd sqlite-autoconf-* && ./configure --prefix=/usr/local && make && make install"
+}

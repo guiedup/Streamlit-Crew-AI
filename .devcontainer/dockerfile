@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/devcontainers/python:1-3.11-bullseye
+
+# Passo 1: Instalar SQLite 3.45+
+RUN apt-get update && \
+    apt-get install -y build-essential wget && \
+    wget https://www.sqlite.org/2024/sqlite-autoconf-3450200.tar.gz && \
+    tar xvfz sqlite-autoconf-*.tar.gz && \
+    cd sqlite-autoconf-* && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install && \
+    ldconfig
+
+# Passo 2: Substituir a lib antiga
+RUN rm -f /usr/lib/x86_64-linux-gnu/libsqlite3.so* && \
+    cp /usr/local/lib/libsqlite3.so* /usr/lib/x86_64-linux-gnu/
+
+# Passo 3: Reinstalar pysqlite3 com a nova lib
+RUN pip install --force-reinstall --no-cache-dir pysqlite3
+
+# Passo 4: Configurar variáveis críticas
+ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+ENV CHROMA_DB_IMPL="duckdb+parquet"

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  crewai-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - GROQ_API_KEY=sua_chave_aqui
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sqlite3; assert sqlite3.sqlite_version >= '3.35.0'"]
+      interval: 10s
+      timeout: 5s
+      retries: 3 
